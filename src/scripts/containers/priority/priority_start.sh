@@ -1,8 +1,8 @@
 #!/usr/bin/env bash
 constraint=$1;
 SITE_NAME="myblog"
-SITE_FOLDER="${SITE_NAME}"
-
+SITE_FOLDER=${SITE_NAME}
+CURRENT_FOLDER_ABSOLUTE_PATH=$(pwd)
 if [[ -z ${constraint} ]];then
    echo "Start container without constarint";
 else
@@ -22,10 +22,10 @@ else
     jekyll new ${SITE_NAME}
 fi
 if [[ -z $(which docker) ]]; then
-    echo "You need to install docker generator!"
+    echo "You need to install docker!"
     exit 1;
 else
     docker rm -f docker-nginx &> /dev/null
-    docker run --name docker-nginx ${constraint} -p 80:80 -d -v ${SITE_FOLDER}/_site/:/usr/share/nginx/html nginx
+    docker run --name docker-nginx ${constraint} -p 80:80 -d -v ${CURRENT_FOLDER_ABSOLUTE_PATH}/${SITE_FOLDER}/_site/:/usr/share/nginx/html nginx
 fi
 
