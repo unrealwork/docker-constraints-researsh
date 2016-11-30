@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 constraint=$1;
 SITE_NAME="myblog"
-SITE_FOLDER="~/${SITE_NAME}"
+SITE_FOLDER="${SITE_NAME}"
 
 if [[ -z ${constraint} ]];then
    echo "Start container without constarint";
