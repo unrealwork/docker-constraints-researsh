@@ -8,9 +8,10 @@ if [[ -z ${constraint} ]];then
 else
     echo "Start priority container with constarint: ${constraint}";
 fi
-if [ -d ~/${SITE_FOLDER} ]; then
+echo "Blog will be generated in ${SITE_FOLDER} folder";
+if [ -d ${SITE_FOLDER} ]; then
   echo "Remove previous version of site";
-  rm -rf ~/${SITE_FOLDER};
+  rm -rf ${SITE_FOLDER};
 else
   echo "There is no previous version of site";
 fi
