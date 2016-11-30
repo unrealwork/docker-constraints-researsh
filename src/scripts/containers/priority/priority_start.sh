@@ -19,13 +19,15 @@ if [[ -z $(which jekyll) ]]; then
     echo "You need to install jekyll generator!"
     exit 1;
 else
-    jekyll new ${SITE_NAME}
+    jekyll new ${SITE_NAME} --skip-bundle
+    jekyll build --source ${SITE_NAME}
+    rm -rf ${SITE_NAME}
 fi
 if [[ -z $(which docker) ]]; then
     echo "You need to install docker!"
     exit 1;
 else
     docker rm -f docker-nginx &> /dev/null
-    docker run --name docker-nginx ${constraint} -p 80:80 -d -v ${CURRENT_FOLDER_ABSOLUTE_PATH}/${SITE_FOLDER}/_site/:/usr/share/nginx/html nginx
+    docker run --name docker-nginx ${constraint} -p 80:80 -d -v ${CURRENT_FOLDER_ABSOLUTE_PATH}/_site/:/usr/share/nginx/html nginx
 fi
 
