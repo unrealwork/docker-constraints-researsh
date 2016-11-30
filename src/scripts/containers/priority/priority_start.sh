@@ -26,6 +26,6 @@ if [[ -z $(which docker) ]]; then
     exit 1;
 else
     docker rm -f docker-nginx &> /dev/null
-    docker run --name docker-nginx ${constraint} -p 80:80 -d -v ~/myblog/_site/:/usr/share/nginx/html nginx
+    docker run --name docker-nginx ${constraint} -p 80:80 -d -v ${SITE_FOLDER}/_site/:/usr/share/nginx/html nginx
 fi
 
