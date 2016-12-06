@@ -11,7 +11,7 @@ DB_DIRECTORY=${TMP_DIRECTORY}/employees_db
 curl -o ${ARCHIVE_FILE} ${DOWNLOAD_LINK}
 tar -xjf ${ARCHIVE_FILE} -C ${TMP_DIRECTORY}
 sed -i 's/storage_engine/default_storage_engine/g' ${DB_DIRECTORY}/employees.sql
-docker run --name ${CONTAINER_NAME} -e MYSQL_ROOT_PASSWORD=root -d mysql
+docker run --name ${CONTAINER_NAME} -p 3306:3306 -e MYSQL_ROOT_PASSWORD=root -d mysql
 docker cp  ${DB_DIRECTORY} ${CONTAINER_NAME}:${DUMPS_DIRECTORY}
 docker cp  import_dump.sh ${CONTAINER_NAME}:/run
 docker exec ${CONTAINER_NAME} sh /run/import_dump.sh
