@@ -1,4 +1,5 @@
 #!/usr/bin/env bash
+
 DOWNLOAD_LINK="http://apache-mirror.rbc.ru/pub/apache//jmeter/binaries/apache-jmeter-3.1.tgz"
 TMP_DIRECTORY=$(mktemp -d)
 ARCHIVE_NAME="jmeter.tgz";

@@ -1,28 +1,47 @@
 [configuration]
   height-units = 1
-  width-units = 1
+  width-units = 2
   entity=jmeter
+  update-interval=15 second
+  timespan = 5 minute
+  offset-right = 25
+  var prefix = "docker-constraint-research.priority.response-time.all."
+
 
 
 [group]
   [widget]
     type = chart
-
-    time-span = 5 minute
-    entity=jmeter
+    statistic = detail
 
     [series]
       label = percentile 99
-      metric = docker-constraint-researh.priority.response-time.all.a.pct99
+      metric = @{prefix}all.pct99
 
     [series]
       label = percentile 95
-      metric = docker-constraint-researh.priority.response-time.all.a.pct95
+      metric = @{prefix}all.pct95
 
     [series]
       label = percentile 90
-      metric = docker-constraint-researh.priority.response-time.all.a.pct90
+      metric = @{prefix}all.pct90
 
     [series]
       label = average
-      metric = docker-constraint-researh.priority.response-time.all.a.avg
+      metric = @{prefix}all.mean
+
+  [widget]
+    type = chart
+    statistic = detail
+
+    [series]
+      label = all hits
+      metric = @{prefix}all.count
+
+    [series]
+      label = succssed hits
+      metric = @{prefix}ok.count
+
+    [series]
+      label = failed hits
+      metric = @{prefix}fail.count
