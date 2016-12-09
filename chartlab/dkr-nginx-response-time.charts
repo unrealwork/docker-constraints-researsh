@@ -3,7 +3,7 @@
   width-units = 2
   entity=jmeter
   update-interval=15 second
-  timespan = 5 minute
+  timespan = 15 minute
   offset-right = 25
   var prefix = "docker-constraint-research.priority.response-time.all."
 
