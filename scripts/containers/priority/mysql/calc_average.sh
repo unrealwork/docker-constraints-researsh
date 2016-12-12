@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 pid=$(pgrep mysqld)
 if [[ -z ${pid} ]]; then
-    echo "There is no running instance of "
+    echo "There is no running instance of mysql daemond (mysqld)"
     exit 1;
 fi;
 
