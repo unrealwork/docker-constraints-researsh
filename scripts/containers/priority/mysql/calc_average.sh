@@ -30,5 +30,5 @@ function average_pid_cpu_usage() {
 }
 
 average_pid_cpu_usage ${pid}
-
+exit 0;
 
