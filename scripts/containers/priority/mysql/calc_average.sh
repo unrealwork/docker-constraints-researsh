@@ -6,6 +6,7 @@ if [[ -z ${pid} ]]; then
 fi;
 
 function calc() { awk "BEGIN{print $*}"; }
+
 #files
 pid_stats_file='/proc/'${pid}'/stat';
 proc_uptime_file='/proc/uptime'
@@ -20,7 +21,7 @@ stime=${stats_values[15]}
 cutime=${stats_values[16]}
 cstime=${stats_values[17]}
 starttime=${stats_values[22]}
-
+#calculations
 total_time=$(calc ${utime}+${stime}+${cutime}+${cstime})
 seconds=$(calc -${uptime}+${starttime}/${hertz})
 cpu_usage=$(calc 100*'(('${total_time}/${hertz}')'/${seconds}')')
