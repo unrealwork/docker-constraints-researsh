@@ -1,19 +1,17 @@
 [configuration]
-  height-units = 1
+  height-units = 3
   width-units = 2
   entity=jmeter
   update-interval=15 second
-  timespan = 15 minute
+  timespan = 5 minute
   offset-right = 25
   var prefix = "docker-constraint-research.priority.response-time.all."
-
-
 
 [group]
   [widget]
     type = chart
+    title = Response time statistics in normal state
     statistic = detail
-
     [series]
       label = percentile 99
       metric = @{prefix}all.pct99
@@ -29,10 +27,11 @@
     [series]
       label = average
       metric = @{prefix}all.mean
-
   [widget]
     type = chart
     statistic = detail
+	title = Queries to MySQL container
+    mode = column
 
     [series]
       label = all hits
@@ -45,3 +44,35 @@
     [series]
       label = failed hits
       metric = @{prefix}fail.count
+
+[group]
+  timespan = 10 minute
+  max-range = 4000
+  [widget]
+    type = chart
+    title = Response time statistics in normal state
+    statistic = average
+    period = 30 second
+   	step-line = false
+    min-range = 0
+
+    [series]
+      endtime = 2016-12-12T14:30:00Z
+      label = average
+      metric = @{prefix}all.mean
+
+
+
+  [widget]
+    type = chart
+    title = Response time statistics in normal state
+    statistic = average
+    period = 30 second
+   	step-line = false
+    min-range = 0
+	endtime = 2016-12-12T15:15:00Z
+
+    [series]
+      label = average
+      metric = @{prefix}all.mean
+      color = red
