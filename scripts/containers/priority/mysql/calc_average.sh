@@ -18,7 +18,7 @@ function average_pid_cpu_usage() {
     local hertz=$(getconf CLK_TCK)
     local uptime=(${uptime_values[0]})
     local utime=${stats_values[14]}
-    local stime=${stats_values[15]}
+    local stime=${stats_values[15]}cd
     local cutime=${stats_values[16]}
     local cstime=${stats_values[17]}
     local starttime=${stats_values[22]}
