@@ -6,7 +6,7 @@
   timespan = 5 minute
   offset-right = 25
   var prefix = "docker-constraint-research.priority.response-time.all."
-
+  
 [group]
   [widget]
     type = chart
@@ -30,9 +30,9 @@
   [widget]
     type = chart
     statistic = detail
-	title = Queries to MySQL container
+  title = Queries to MySQL container
     mode = column
-
+    
     [series]
       label = all hits
       metric = @{prefix}all.count
@@ -44,7 +44,7 @@
     [series]
       label = failed hits
       metric = @{prefix}fail.count
-
+      
 [group]
   timespan = 10 minute
   max-range = 4000
@@ -53,26 +53,55 @@
     title = Response time statistics in normal state
     statistic = average
     period = 30 second
-   	step-line = false
+    step-line = false
     min-range = 0
 
     [series]
       endtime = 2016-12-12T14:30:00Z
       label = average
       metric = @{prefix}all.mean
-
-
-
+      
+    
+      
   [widget]
     type = chart
-    title = Response time statistics in normal state
+    title = Response time statistics in stressed state
     statistic = average
     period = 30 second
-   	step-line = false
+    step-line = false
     min-range = 0
-	endtime = 2016-12-12T15:15:00Z
-
+  endtime = 2016-12-12T15:15:00Z
+    
     [series]
       label = average
-      metric = @{prefix}all.mean
+      metric = @{prefix}all.mean  
       color = red
+      
+  [group]
+    [widget]
+      type = table
+      title = Response time forecast
+      timespan = 3 hour
+      responsive = false
+      column-metric=null
+      column-entity = null
+      column-time = null
+      column-value = Cores' count
+      
+      var cores_count = [1,2,3,4,5,6,7,8]
+      
+    
+    [column]
+        label = Cores
+        for cc in cores_count
+        series-value = @{cc}
+        endfor
+  
+    [column]
+        key=value
+        label = Expected response time
+        for cc in cores_count
+          [series]
+          metric = @{prefix}all.mean
+        endfor
+  

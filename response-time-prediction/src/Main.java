@@ -38,7 +38,7 @@ public class Main {
                 );
             }
         } catch (IOException e) {
-            LOGGER.severe("Failed to read propeerties  file!" + filename);
+            LOGGER.severe(String.format("Failed to read properties  file!%s", filename));
         }
 
     }
