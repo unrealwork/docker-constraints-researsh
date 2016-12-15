@@ -1,19 +1,19 @@
 #!/usr/bin/env bash
-pid=$(pgrep mysqld)
-if [[ -z ${pid} ]]; then
-    echo "There is no running instance of mysql daemon (mysqld)"
-    exit 1;
-fi;
 
-if [[ -z $1 ]]; then
-    echo "You need specify interval in seconds";
-fi;
+function get_stats_file() {
+        if [[ -z $1 ]]; then
+            echo "/proc/stat";
+        else
+            echo "/proc/$1/stat"
+        fi
+        exit 0;
+}
 
 function calc() { awk "BEGIN{print $*}"; }
 
-function ticks_by_pid() {
+function ticks_by_file() {
     #files
-    local pid_stats_file='/proc/'$1'/stat';
+    local pid_stats_file=$1;
     local proc_uptime_file='/proc/uptime'
     #extract values
     local stats_values=($(<${pid_stats_file}))
@@ -32,9 +32,9 @@ function ticks_by_pid() {
 }
 
 function avg_cpu_usage() {
-    local start_ticks=$(ticks_by_pid ${pid})
-    sleep $1
-    local end_ticks=$(ticks_by_pid ${pid})
+    local start_ticks=$(ticks_by_file $2)
+    sleep $1;
+    local end_ticks=$(ticks_by_file $2)
     #calculations
     local total_ticks=$(calc ${end_ticks}-${start_ticks})
     local hertz=$(getconf CLK_TCK)
@@ -42,7 +42,12 @@ function avg_cpu_usage() {
     echo ${cpu_usage}
 }
 
-avg_cpu_usage $1
+
+if [[ $# == 0 && $# > 2 ]]; then
+    echo "Incorrect number of args"
+fi;
+
+avg_cpu_usage $1 $(get_stats_file $2)
 
 exit 0;
 
