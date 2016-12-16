@@ -1,5 +1,6 @@
 #!/usr/bin/env bash
 
+DEFAULT_SLEEP_PERIOD=15;
 function get_stats_file() {
         if [[ -z $1 ]]; then
             echo "/proc/stat";
@@ -43,11 +44,21 @@ function avg_cpu_usage() {
 }
 
 
+function get_current_mills {
+    echo $(($(date +%s%N)/1000000));
+    exit 1;
+}
 if [[ $# == 0 && $# > 2 ]]; then
     echo "Incorrect number of args"
 fi;
 
-avg_cpu_usage $1 $(get_stats_file $2)
+
+
+overall_loading=$(avg_cpu_usage ${DEFAULT_SLEEP_PERIOD} $(get_stats_file))
+mysql_loading=$(avg_cpu_usage ${DEFAULT_SLEEP_PERIOD} $(get_stats_file $(pgrep mysqld)) )
+
+echo -e "series e:dkr.axibase.com m:cpu_usage="${overall_loading}" ms:"$(get_current_mills)" t:proc=overall" > /dev/tcp/hbs.axibase.com/9081
+echo -e "series e:dkr.axibase.com m:cpu_usage="${mysql_loading}" ms:"$(get_current_mills)" t:proc=mysql" > /dev/tcp/hbs.axibase.com/9081
 
 exit 0;
 
