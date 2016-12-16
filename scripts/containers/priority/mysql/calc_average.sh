@@ -48,17 +48,27 @@ function get_current_mills {
     echo $(($(date +%s%N)/1000000));
     exit 1;
 }
+
+function send_statistic {
+    echo -e "series e:dkr.axibase.com m:cpu_usage="$1" ms:"$(get_current_mills)" t:proc="$2 > /dev/tcp/hbs.axibase.com/9081
+}
+
 if [[ $# == 0 && $# > 2 ]]; then
     echo "Incorrect number of args"
 fi;
 
 
 
-overall_loading=$(avg_cpu_usage ${DEFAULT_SLEEP_PERIOD} $(get_stats_file))
-mysql_loading=$(avg_cpu_usage ${DEFAULT_SLEEP_PERIOD} $(get_stats_file $(pgrep mysqld)) )
 
-echo -e "series e:dkr.axibase.com m:cpu_usage="${overall_loading}" ms:"$(get_current_mills)" t:proc=overall" > /dev/tcp/hbs.axibase.com/9081
-echo -e "series e:dkr.axibase.com m:cpu_usage="${mysql_loading}" ms:"$(get_current_mills)" t:proc=mysql" > /dev/tcp/hbs.axibase.com/9081
+
+while :
+do
+  overall_loading=$(avg_cpu_usage ${DEFAULT_SLEEP_PERIOD} $(get_stats_file))
+  mysql_loading=$(avg_cpu_usage ${DEFAULT_SLEEP_PERIOD} $(get_stats_file $(pgrep mysqld)) )
+  send_statistic ${overall_loading} "overall"
+  send_statistic ${mysql_loading} "mysql"
+done
+
 
 exit 0;
 
