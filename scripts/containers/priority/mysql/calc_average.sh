@@ -50,7 +50,7 @@ function get_current_mills {
 }
 
 function send_statistic {
-    echo -e "series e:dkr.axibase.com m:cpu_usage="$1" ms:"$(get_current_mills)" t:proc="$2 > /dev/tcp/hbs.axibase.com/9081
+    echo -e "series e:dkr.axibase.com m:proc_stat.cpu_usage="$1" ms:"$(get_current_mills)" t:proc="$2 > /dev/tcp/hbs.axibase.com/9081
 }
 
 if [[ $# == 0 && $# > 2 ]]; then
