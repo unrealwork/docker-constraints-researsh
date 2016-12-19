@@ -26,4 +26,4 @@ services:
     restart: always
     environment:
       - COLLECTOR_ARGS=-atsd-url=https://${USER}:${PASSWORD}@atsd:8443 -job-path=https://raw.githubusercontent.com/axibase/axibase-collector-docs/master/job-templates/socrata-cdc.xml -job-execute=socrata-cdc
-      - _JAVA_OPTIONS=-Xmx2g
+      - JAVA_OPTS=-Xmx2g
