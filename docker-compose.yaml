@@ -15,7 +15,6 @@ services:
     environment:
       - COLLECTOR_USER_NAME=${USER}
       - COLLECTOR_USER_PASSWORD=${PASSWORD}
-      - COLLECTOR_USER_TYPE=api-rw
   collector:
     image: axibase/collector:latest
     depends_on:
