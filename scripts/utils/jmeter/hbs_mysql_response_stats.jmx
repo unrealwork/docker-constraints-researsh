@@ -31,7 +31,7 @@
             </elementProp>
             <elementProp name="rootMetricsPrefix" elementType="Argument">
               <stringProp name="Argument.name">rootMetricsPrefix</stringProp>
-              <stringProp name="Argument.value">jmeter.dkr.mysql.docker-constraint-research.priority.response-time.</stringProp>
+              <stringProp name="Argument.value">cpu-shares.docker-constraint.</stringProp>
               <stringProp name="Argument.metadata">=</stringProp>
             </elementProp>
             <elementProp name="percentiles" elementType="Argument">
