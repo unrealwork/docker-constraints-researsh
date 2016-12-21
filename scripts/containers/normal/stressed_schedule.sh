@@ -24,7 +24,9 @@ function get_current_mills {
 function calc() { awk "BEGIN{print $*}"; }
 
 function send_statistic {
-    echo -e "property e:stressed-configuration k:id=$1 t:cpu  ms:"$(get_current_mills)" v:start_time="$2" v:end_time="$3" v:options="$4> /dev/tcp/hbs.axibase.com/9081
+    local command="property e:stressed-configuration k:id=$1 t:cpu  ms:"$(get_current_mills)" v:start_time="$2" v:end_time="$3" v:options="'"'$4'"';
+    echo ${command}
+    echo -e ${command} > /dev/tcp/hbs.axibase.com/9081
 }
 
 
@@ -32,7 +34,7 @@ core_count=8;
 clean_up
 for ((i = 0; i <= $core_count; i++)); do
     echo ${i}" configuration is started";
-    options="--cpu "$i"";
+    options="--cpu "${i}"";
     echo "Warm up!";
     start_time=$(calc $(get_current_mills)+ $(calc $1*1000));
     echo ${start_time}
@@ -46,5 +48,5 @@ for ((i = 0; i <= $core_count; i++)); do
     end_time=$(get_current_mills)
     echo ${end_time}
     echo "Sending statistic about the configuration";
-    send_statistic conf${i} ${start_time} ${end_time} ${options}
+    send_statistic conf${i} ${start_time} ${end_time} "$options"
 done
