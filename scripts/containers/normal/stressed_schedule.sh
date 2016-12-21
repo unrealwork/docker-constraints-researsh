@@ -30,14 +30,18 @@ function send_statistic {
 
 core_count=8;
 clean_up
-for ((i = 1; i <= $core_count; i++)); do
+for ((i = 0; i <= $core_count; i++)); do
     echo ${i}" configuration is started";
     options="--cpu "$i"";
-    echo ${options};
     echo "Warm up!";
     start_time=$(calc $(get_current_mills)+ $(calc $1*1000));
     echo ${start_time}
-    docker run --name ${container_name} -it progrium/stress ${options} --timeout $(calc $1+$2)
+    if [[ ${i} > 0 ]]; then
+        docker run --name ${container_name} -it progrium/stress ${options} --timeout $(calc $1+$2)
+    else
+        echo "Just sleep without loading";
+        sleep $(calc $1+$2)
+    fi;
     clean_up
     end_time=$(get_current_mills)
     echo ${end_time}
