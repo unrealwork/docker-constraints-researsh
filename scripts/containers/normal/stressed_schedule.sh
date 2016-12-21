@@ -33,9 +33,9 @@ for ((i = 1; i <= $core_count; i++)); do
     options="--cpu "${i}"";
     docker run --name ${container_name} -it progrium/stress ${options} &
     echo "Warm up!";
-    sleep 10;
+    sleep $1;
     start_time=$(get_current_mills)
-    sleep 10;
+    sleep $2;
     clean_up
     end_time=$(get_current_mills)
     echo "Sending statistic about the configuration";
