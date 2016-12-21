@@ -21,6 +21,8 @@ function get_current_mills {
     exit 1;
 }
 
+function calc() { awk "BEGIN{print $*}"; }
+
 function send_statistic {
     echo -e "property e:stressed-configuration k:id=$1 t:cpu  ms:"$(get_current_mills)" v:start_time="$2" v:end_time="$3" v:options="$4> /dev/tcp/hbs.axibase.com/9081
 }
@@ -30,14 +32,15 @@ core_count=8;
 clean_up
 for ((i = 1; i <= $core_count; i++)); do
     echo ${i}" configuration is started";
-    options="--cpu "${i}"";
-    docker run --name ${container_name} -it progrium/stress ${options} &
+    options="--cpu "$i"";
+    echo ${options};
     echo "Warm up!";
-    sleep $1;
-    start_time=$(get_current_mills)
-    sleep $2;
+    start_time=$(calc $(get_current_mills)+ $(calc $1*1000));
+    echo ${start_time}
+    docker run --name ${container_name} -it progrium/stress ${options} --timeout $(calc $1+$2)
     clean_up
     end_time=$(get_current_mills)
+    echo ${end_time}
     echo "Sending statistic about the configuration";
     send_statistic conf${i} ${start_time} ${end_time} ${options}
 done
