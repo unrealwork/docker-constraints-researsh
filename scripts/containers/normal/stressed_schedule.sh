@@ -31,12 +31,10 @@ function send_network_command {
 
 function send_configuration_entity {
     local command="entity e:stressed-configuration z:"$(date +%Z)
-    echo ${command}
     send_network_command ${command}
 }
 function send_configuration_property {
     local command="property e:stressed-configurations k:id=$1 t:cpu  d:"'"'$(get_current_iso_time)'"'" v:start_time="$2" v:end_time="$3" v:options="'"'$4'"';
-    echo ${command}
     send_network_command ${command}
 }
 
@@ -48,7 +46,6 @@ for ((i = 0; i <= $core_count; i++)); do
     options="--cpu "${i}"";
     echo "Warm up!";
     start_time=$(get_current_iso_time);
-    echo ${start_time}
     if [[ ${i} > 0 ]]; then
         docker run --name ${container_name} -it progrium/stress ${options} --timeout $(calc $1+$2)
     else
