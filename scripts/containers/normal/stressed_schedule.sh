@@ -23,15 +23,24 @@ function get_current_mills {
 
 function calc() { awk "BEGIN{print $*}"; }
 
-function send_statistic {
-    local command="property e:stressed-configuration k:id=$1 t:cpu  ms:"$(get_current_mills)" v:start_time="$2" v:end_time="$3" v:options="'"'$4'"';
+function send_network_command {
+    echo -e $1 > /dev/tcp/hbs.axibase.com/9081
+}
+
+function send_configuration_entity {
+    local command="entity e:stressed-configuration z:"$(date +%Z)
     echo ${command}
-    echo -e ${command} > /dev/tcp/hbs.axibase.com/9081
+    send_network_command ${command}
+}
+function send_configuration_property {
+    local command="property e:stressed-configuration k:id=$1 t:cpu  ms:"$(get_current_mills)" v:start_time="$2" v:end_time="$3" v:options="'"'$4'"';
+    send_network_command ${command}
 }
 
 
 core_count=8;
 clean_up
+send_configuration_entity
 for ((i = 0; i <= $core_count; i++)); do
     echo ${i}" configuration is started";
     options="--cpu "${i}"";
@@ -48,5 +57,5 @@ for ((i = 0; i <= $core_count; i++)); do
     end_time=$(get_current_mills)
     echo ${end_time}
     echo "Sending statistic about the configuration";
-    send_statistic conf${i} ${start_time} ${end_time} "$options"
+    send_configuration_property conf${i} ${start_time} ${end_time} "$options"
 done
