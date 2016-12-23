@@ -16,8 +16,8 @@ function clean_up() {
 fi
 }
 
-function get_current_mills {
-    echo $(($(date +%s%N)/1000000));
+function get_current_iso_time {
+    echo $(date -u +"%Y-%m-%dT%H:%M:%SZ")
     exit 1;
 }
 
@@ -33,19 +33,19 @@ function send_configuration_entity {
     send_network_command ${command}
 }
 function send_configuration_property {
-    local command="property e:stressed-configuration k:id=$1 t:cpu  ms:"$(get_current_mills)" v:start_time="$2" v:end_time="$3" v:options="'"'$4'"';
+    local command="property e:stressed-configurations k:id=$1 t:cpu  d:"'"'$(get_current_iso_time)'"'" v:start_time="$2" v:end_time="$3" v:options="'"'$4'"';
+    echo ${command}
     send_network_command ${command}
 }
 
 
 core_count=8;
 clean_up
-send_configuration_entity
 for ((i = 0; i <= $core_count; i++)); do
     echo ${i}" configuration is started";
     options="--cpu "${i}"";
     echo "Warm up!";
-    start_time=$(calc $(get_current_mills)+ $(calc $1*1000));
+    start_time=$(get_current_iso_time);
     echo ${start_time}
     if [[ ${i} > 0 ]]; then
         docker run --name ${container_name} -it progrium/stress ${options} --timeout $(calc $1+$2)
@@ -54,7 +54,7 @@ for ((i = 0; i <= $core_count; i++)); do
         sleep $(calc $1+$2)
     fi;
     clean_up
-    end_time=$(get_current_mills)
+    end_time=$(get_current_iso_time)
     echo ${end_time}
     echo "Sending statistic about the configuration";
     send_configuration_property conf${i} ${start_time} ${end_time} "$options"
