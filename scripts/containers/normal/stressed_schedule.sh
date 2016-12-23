@@ -24,7 +24,9 @@ function get_current_iso_time {
 function calc() { awk "BEGIN{print $*}"; }
 
 function send_network_command {
-    echo -e $1 > /dev/tcp/hbs.axibase.com/9081
+    local wrapped_command=
+    echo $@
+    echo -e $@ > /dev/tcp/hbs.axibase.com/9081
 }
 
 function send_configuration_entity {
