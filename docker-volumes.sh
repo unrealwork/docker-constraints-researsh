@@ -22,7 +22,7 @@ function send_series {
 
 function parse_entity () {
     local original_name=$@;
-    echo "${original_name/$docker_volumes_directory/''}"
+    echo "${original_name/$docker_volumes_directory/}"
 }
 
 
