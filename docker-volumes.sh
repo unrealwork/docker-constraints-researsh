@@ -7,7 +7,7 @@ docker_volumes_directory=/var/lib/docker/volumes/
 
 
 function send_network_command {
-    echo -e $@> /dev/tcp/hbs.axibase.com/9081
+    echo -e $@ > /dev/tcp/hbs.axibase.com/9081
 }
 
 function send_series {
@@ -16,7 +16,6 @@ function send_series {
     local value=$3
     local datetime=$4
     local command="series e:$entity m:$metric=$value d:"'"'${datetime}'"';
-    echo ${command}
     send_network_command ${command}
 }
 
@@ -45,7 +44,6 @@ array_length=${#array[@]}
 
 datetime=$(get_current_iso_time)
 
-echo $(get_docker_file_system_size);
 for (( c=0; c<$array_length; c+=2 ))
 do
     byte_size=${array[c]};
