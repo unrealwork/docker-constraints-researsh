@@ -1,19 +1,23 @@
 #!/usr/bin/env bash
 
+# Example of usages
+# stdout: sudo ./docker_volume_collect.sh
+# file: sudo ./docker_volume_collect.sh >> ~/out.txt
+# atsd_host: sudo ./docker_volume_collect.sh > /dev/tcp/atsd_host/tcp_port
+
 metric_used=docker.volume.used
 metric_used_percent=docker.volume.used_percent
 metric_total_used=docker.volume.total_used
 metric_total_used_percent=docker.volume.total_used_percent
 metric_fs_size=docker.volume.fs.size
 docker_volumes_directory=/var/lib/docker/volumes/
-atsd_host=$1
+
+
 
 
 #Send network command to atsd by TCP
 function send_network_command {
-  echo -e $@ > ${atsd_host}
-  # echo $@ >> ./out.txt
-  # echo -e $@
+  echo $@
 }
 
 #Hostname in lower case
@@ -90,10 +94,7 @@ function send_volume_information {
     #Send information about total containers used memory
     send_series ${hostname} ${metric_total_used} ${total_used} ${datetime}
     send_series ${hostname} ${metric_total_used_percent} $(calc ${total_used}/${fs_size}*100) ${datetime}
-
+    exit 1;
 }
 
-if [[ ($# == 1) && !( -z $1) ]]; then
-    atsd_host=$1
-    send_volume_information
-fi
+send_volume_information
