@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-DEFAULT_SLEEP_PERIOD=1;
+DEFAULT_SLEEP_PERIOD=15;
 function get_stats_file() {
         if [[ -z $1 ]]; then
             echo "/proc/stat";
@@ -57,35 +57,16 @@ if [[ $# == 0 && $# > 2 ]]; then
     echo "Incorrect number of args"
 fi;
 
-function calc_overall {
-cpu=`cat /proc/stat | head -n1 | sed 's/cpu //'`
-    user=`echo $cpu | awk '{print $1}'`
-    system=`echo $cpu | awk '{print $2}'`
-    nice=`echo $cpu | awk '{print $3}'`
-    idle=`echo $cpu | awk '{print $4}'`
-    wait=`echo $cpu | awk '{print $5}'`
-    irq=`echo $cpu | awk '{print $6}'`
-    srq=`echo $cpu | awk '{print $7}'`
-    zero=`echo $cpu | awk '{print $8}'`
-    total=$(($user+$system+$nice+$idle+$wait+$irq+$srq+$zero))
-    diff_idle=$(($idle-$prev_idle))
-    diff_total=$(($total-$prev_total))
-    usage=$(($((1000*$(($diff_total-$diff_idle))/$diff_total+5))/10))
-    prev_total=${total}
-    prev_idle=${idle}
-    echo ${usage}
-    sleep $1
-}
 
-prev_total=0
-prev_idle=0
+
+
+
 while :
 do
-  overall_loading=$(calc_overall ${DEFAULT_SLEEP_PERIOD})
-#  mysql_loading=$(avg_cpu_usage ${DEFAULT_SLEEP_PERIOD} $(get_stats_file $(pgrep mysqld)) )
-#  send_statistic ${overall_loading} "overall"
-#  send_statistic ${mysql_loading} "mysql"
-    echo ${overall_loading}
+  # overall_loading=$(avg_cpu_usage ${DEFAULT_SLEEP_PERIOD} $(get_stats_file))
+  mysql_loading=$(avg_cpu_usage ${DEFAULT_SLEEP_PERIOD} $(get_stats_file $(pgrep mysqld)) )
+  # send_statistic ${overall_loading} "overall"
+  send_statistic ${mysql_loading} "mysql"
 done
 
 
