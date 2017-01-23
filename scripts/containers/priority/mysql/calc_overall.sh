@@ -1,7 +1,7 @@
 #!/bin/bash
 # by Paul Colby (http://colby.id.au), no rights reserved ;)
 
-DEFAULT_SLEEP_PERIOD=1;
+DEFAULT_SLEEP_PERIOD=15;
 
 PREV_TOTAL=0
 PREV_IDLE=0
