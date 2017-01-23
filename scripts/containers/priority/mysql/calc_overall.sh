@@ -1,10 +1,15 @@
 #!/bin/bash
 # by Paul Colby (http://colby.id.au), no rights reserved ;)
 
-DEFAULT_SLEEP_PERIOD=15;
+DEFAULT_SLEEP_PERIOD=1;
 
 PREV_TOTAL=0
 PREV_IDLE=0
+
+function get_current_mills {
+    echo $(($(date +%s%N)/1000000));
+    exit 1;
+}
 
 function send_statistic {
     echo -e "series e:dkr.axibase.com m:proc_stat.cpu_usage="$1" ms:"$(get_current_mills)" t:proc="$2 > /dev/tcp/hbs.axibase.com/9081
@@ -24,9 +29,9 @@ while true; do
   # Calculate the CPU usage since we last checked.
   let "DIFF_IDLE=$IDLE-$PREV_IDLE"
   let "DIFF_TOTAL=$TOTAL-$PREV_TOTAL"
-  let "DIFF_USAGE=(1000*($DIFF_TOTAL-$DIFF_IDLE)/$DIFF_TOTAL+5)/10"
+  let "DIFF_USAGE=(8*1000*($DIFF_TOTAL-$DIFF_IDLE)/$DIFF_TOTAL+5)/10"
   echo -en "\rCPU: $DIFF_USAGE%  \b\b"
-  # send_statistic ${DIFF_USAGE} "overall"
+  send_statistic ${DIFF_USAGE} "overall"
   # Remember the total and idle CPU times for the next check.
   PREV_TOTAL="$TOTAL"
   PREV_IDLE="$IDLE"
